@@ -1,4 +1,4 @@
-# pecs augmentative communication BE
+# PECS Augmentative Communication Backend
 
 Augmentative Communication Backend Enviroment
 
