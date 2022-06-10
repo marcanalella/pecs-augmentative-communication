@@ -34,7 +34,7 @@ type DbConfig struct {
 	Port     string `envconfig:"PSQL_PORT"`
 	User     string `envconfig:"PSQL_USER"`
 	Password string `envconfig:"PSQL_PSW"`
-	Name     string `envconfig:"PSQL_DATABASE"`
+	Database string `envconfig:"PSQL_DATABASE"`
 }
 
 //Dialect returns mocked postgres dialect
@@ -44,7 +44,7 @@ func (c DbConfig) Dialect() string {
 
 //ConnectionInfo returns string to connect to postgres db
 func (c DbConfig) ConnectionInfo() string {
-	return fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=require", c.Host, c.Port, c.User, c.Password, c.Name)
+	return fmt.Sprintf("host=%s port=%s user=%s password=%s database=%s sslmode=require", c.Host, c.Port, c.User, c.Password, c.Database)
 	//sslmode=require for heroku postgres instance
 }
 
