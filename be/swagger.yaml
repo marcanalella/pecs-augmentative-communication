@@ -1,0 +1,106 @@
+asePath: /
+consumes:
+- application/json
+definitions:
+  LoginResponse:
+    description: LoginResponse represents a login response from authentication
+    properties:
+      token:
+        type: string
+        x-go-name: Token
+    type: object
+    x-go-package: github.com/pecs/pecs-be/internal/entity
+  UUID:
+    description: |-
+      A UUID is a 128 bit (16 byte) Universal Unique IDentifier as defined in RFC
+      4122.
+    items:
+      format: uint8
+      type: integer
+    type: array
+    x-go-package: github.com/google/uuid
+  User:
+    description: |-
+      A user is the security principal for this application.
+      It's also used as one of main axes for reporting.
+    properties:
+      Email:
+        type: string
+      ID:
+        $ref: '#/definitions/UUID'
+      Name:
+        description: the name for this poduct
+        maxLength: 128
+        type: string
+      Password:
+        type: string
+      Surname:
+        type: string
+    required:
+    - Name
+    title: User represents the user for this application
+    type: object
+    x-go-package: github.com/pecs/pecs-be/internal/entity
+host: localhost
+info:
+  description: |-
+    This should demonstrate all the possible comment annotations
+    that are available to turn go code into a fully compliant swagger 2.0 spec
+  title: of Version API
+  version: 1.0.0
+paths:
+  /login:
+    post:
+      description: Authenticate the user through user and password
+      operationId: userLogin
+      responses:
+        "200":
+          description: LoginResponse
+          schema:
+            $ref: '#/definitions/LoginResponse'
+      tags:
+      - login
+  /signup:
+    post:
+      description: Signup user given the request body
+      operationId: signupUser
+      parameters:
+      - description: |-
+          User data structure to Update or Create.
+          Note: the id field is ignored by update and create operations
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/User'
+      responses:
+        "200":
+          $ref: '#/responses/userResponse'
+      tags:
+      - signup
+  /version:
+    get:
+      description: Returns version number and build time
+      operationId: appVersion
+      responses:
+        "200":
+          $ref: '#/responses/Version'
+      tags:
+      - version
+produces:
+- application/json
+responses:
+  Version:
+    description: Version represents application version
+    headers:
+      build:
+        type: string
+      number:
+        type: string
+  userResponse:
+    description: Data structure representing a single user
+    schema:
+      $ref: '#/definitions/User'
+schemes:
+- http
+swagger: "2.0"
