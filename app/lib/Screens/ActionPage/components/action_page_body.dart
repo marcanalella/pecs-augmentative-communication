@@ -30,7 +30,7 @@ class ActionPageBody extends StatefulWidget {
 }
 
 class _ActionPageBodyState extends State<ActionPageBody> {
-  List<Ations> actions = new List();
+  List<Ations> actions;
   final TextEditingController _titleController = TextEditingController();
 
   Future<String> insertAction(String name, String img) async {
@@ -96,7 +96,7 @@ class _ActionPageBodyState extends State<ActionPageBody> {
     return ActionPageBackground(
         child: FutureBuilder(
       future: getActions(),
-      builder: (context, snapshot) => (actions.length != 0)
+      builder: (context, snapshot) => (actions != null && actions.length != 0)
           ? Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
@@ -132,22 +132,24 @@ class _ActionPageBodyState extends State<ActionPageBody> {
                 )
               ],
             )
-          : snapshot.hasError
-              ? Text("An error occurred")
-              : Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                      Text("Lista vuota"),
-                      RoundedButton(
-                        text: "+ AZIONE",
-                        color: kPrimaryLightColor,
-                        textColor: Colors.black,
-                        press: () {
-                          _showChoiceDialog(context);
-                        },
-                      )
-                    ]),
-    ));
+              : snapshot.hasError
+                  ? Text("Errore durante il caricamento")
+                  : (actions != null && actions.length == 0)
+                      ? Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                              Text("Lista vuota"),
+                              RoundedButton(
+                                text: "+ AZIONE",
+                                color: kPrimaryLightColor,
+                                textColor: Colors.black,
+                                press: () {
+                                  _showChoiceDialog(context);
+                                },
+                              )
+                            ])
+                      : CircularProgressIndicator()),
+    );
   }
 
   void displayDialog(context, title, text) => showDialog(
@@ -165,9 +167,11 @@ class _ActionPageBodyState extends State<ActionPageBody> {
             content: SingleChildScrollView(
               child: ListBody(
                 children: <Widget>[
+                  Text("Inserisci immagine"),
                   RoundedInputField(
-                    hintText: "Titolo",
-                    emailController: _titleController,
+                      hintText: "Titolo",
+                      emailController: _titleController,
+                      icon: Icons.arrow_forward
                   ),
                   RoundedButton(
                     text: "Galleria",

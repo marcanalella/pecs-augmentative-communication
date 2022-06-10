@@ -113,10 +113,11 @@ class CategoryListTileWidget extends StatelessWidget {
                     press: () async {
                       var res = await deleteCategory(category.id);
                       if (res != null) {
-                        Navigator.push(
+                        Navigator.pop(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => HomePage()));                      } else {
+                                builder: (context) => HomePage()));                      }
+                      else {
                         displayDialog(context, "Error!", "ERRORE");
                         //TODO controll other errors
                       }

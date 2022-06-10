@@ -39,7 +39,7 @@ Future<String> insertCategory(String name, String img) async {
 }
 
 class _HomePageBodyState extends State<HomePageBody> {
-  List<Category> categories = new List();
+  List<Category> categories;
   final TextEditingController _titleController = TextEditingController();
 
   Future<List<Category>> getCategories() async {
@@ -87,7 +87,8 @@ class _HomePageBodyState extends State<HomePageBody> {
     return HomePageBackground(
       child: FutureBuilder(
           future: getCategories(),
-          builder: (context, snapshot) => (categories.length != 0)
+          builder: (context, snapshot) => (categories != null &&
+                  categories.length != 0)
               ? Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
@@ -125,8 +126,22 @@ class _HomePageBodyState extends State<HomePageBody> {
                   ],
                 )
               : snapshot.hasError
-                  ? Text("An error occurred")
-                  : CircularProgressIndicator()),
+                  ? Text("Errore durante il caricamento")
+                  : (categories != null && categories.length == 0)
+                      ? Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                              Text("Lista vuota"),
+                              RoundedButton(
+                                text: "+ CATEGORIA",
+                                color: kPrimaryLightColor,
+                                textColor: Colors.black,
+                                press: () {
+                                  _showChoiceDialog(context);
+                                },
+                              )
+                            ])
+                      : CircularProgressIndicator()),
     );
   }
 
@@ -141,31 +156,45 @@ class _HomePageBodyState extends State<HomePageBody> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text("Inserisci titolo e immagine"),
+            title: Text("Inserisci categoria"),
             content: SingleChildScrollView(
               child: ListBody(
                 children: <Widget>[
+                  Text("Inserisci titolo e immagine"),
                   RoundedInputField(
-                    hintText: "Titolo",
-                    emailController: _titleController,
+                      hintText: "Titolo",
+                      emailController: _titleController,
+                      icon: Icons.arrow_forward),
+                  SizedBox(height: 5),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      ElevatedButton(
+                        onPressed: () {
+                          _openGallery(context);
+                        },
+                        child:
+                            Icon(Icons.perm_media_sharp, color: Colors.black),
+                        style: ElevatedButton.styleFrom(
+                          shape: CircleBorder(),
+                          padding: EdgeInsets.all(20),
+                          primary: kPrimaryLightColor, // <-- Button color
+                        ),
+                      ),
+                      ElevatedButton(
+                        onPressed: () {
+                          _openCamera(context);
+                        },
+                        child: Icon(Icons.photo_camera, color: Colors.black),
+                        style: ElevatedButton.styleFrom(
+                          shape: CircleBorder(),
+                          padding: EdgeInsets.all(20),
+                          primary: kPrimaryLightColor, // <-- Button color
+                        ),
+                      )
+                    ],
                   ),
-                  RoundedButton(
-                    text: "Galleria",
-                    color: kPrimaryLightColor,
-                    textColor: Colors.black,
-                    press: () {
-                      _openGallery(context);
-                    },
-                  ),
-                  RoundedButton(
-                    text: "Fotocamera",
-                    color: kPrimaryLightColor,
-                    textColor: Colors.black,
-                    press: () {
-                      _openCamera(context);
-                    },
-                  ),
-                  //ImageShow(),
+                  ImageShow(),
                   RoundedButton(
                     text: "Aggiungi",
                     press: () async {
@@ -175,9 +204,9 @@ class _HomePageBodyState extends State<HomePageBody> {
                       if (jwt != null) {
                         setState(() {});
                         Navigator.of(context).pop();
+                        displayDialog(context, "OK!", "Categoria inserita correttamente");
                       } else {
-                        displayDialog(context, "Error!", "ERRORE");
-                        //TODO controll other errors
+                        displayDialog(context, "Error!", "Errore nel caricamento della categoria");
                       }
                     },
                   )
@@ -188,13 +217,18 @@ class _HomePageBodyState extends State<HomePageBody> {
         });
   }
 
-/*  Widget ImageShow(
-  List<Integer> img = imageFile.readAsBytesSync()
-  if (imageFile.readAsBytesSync().)
-    return Image.asset(
-    base64Decode(base64String),
-    height: height * 0.35,
-    );
-  )
-}*/
+  Widget ImageShow() {
+    if (imageFile != null) {
+      return Column(
+        children: [
+          SizedBox(height: 10),
+          Image.file(
+            imageFile,
+            fit: BoxFit.cover,
+          )
+        ],
+      );
+    }
+    return SizedBox(height: 0.1);
+  }
 }
