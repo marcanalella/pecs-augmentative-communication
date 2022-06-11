@@ -163,33 +163,45 @@ class _ActionPageBodyState extends State<ActionPageBody> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text("Inserisci titolo e immagine"),
+            title: Text("Inserisci Azione"),
             content: SingleChildScrollView(
               child: ListBody(
                 children: <Widget>[
-                  Text("Inserisci immagine"),
+                  Text("Inserisci titolo e immagine"),
                   RoundedInputField(
                       hintText: "Titolo",
                       emailController: _titleController,
-                      icon: Icons.arrow_forward
+                      icon: Icons.arrow_forward),
+                  SizedBox(height: 5),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      ElevatedButton(
+                        onPressed: () {
+                          _openGallery(context);
+                        },
+                        child:
+                        Icon(Icons.perm_media_sharp, color: Colors.black),
+                        style: ElevatedButton.styleFrom(
+                          shape: CircleBorder(),
+                          padding: EdgeInsets.all(20),
+                          primary: kPrimaryLightColor, // <-- Button color
+                        ),
+                      ),
+                      ElevatedButton(
+                        onPressed: () {
+                          _openCamera(context);
+                        },
+                        child: Icon(Icons.photo_camera, color: Colors.black),
+                        style: ElevatedButton.styleFrom(
+                          shape: CircleBorder(),
+                          padding: EdgeInsets.all(20),
+                          primary: kPrimaryLightColor, // <-- Button color
+                        ),
+                      )
+                    ],
                   ),
-                  RoundedButton(
-                    text: "Galleria",
-                    color: kPrimaryLightColor,
-                    textColor: Colors.black,
-                    press: () {
-                      _openGallery(context);
-                    },
-                  ),
-                  RoundedButton(
-                    text: "Fotocamera",
-                    color: kPrimaryLightColor,
-                    textColor: Colors.black,
-                    press: () {
-                      _openCamera(context);
-                    },
-                  ),
-                  //ImageShow(),
+                  imageShow(),
                   RoundedButton(
                     text: "Aggiungi",
                     press: () async {
@@ -199,9 +211,9 @@ class _ActionPageBodyState extends State<ActionPageBody> {
                       if (jwt != null) {
                         setState(() {});
                         Navigator.of(context).pop();
+                        displayDialog(context, "OK!", "Categoria inserita correttamente");
                       } else {
-                        displayDialog(context, "Error!", "ERRORE");
-                        //TODO controll other errors
+                        displayDialog(context, "Error!", "Errore nel caricamento della categoria");
                       }
                     },
                   )
@@ -210,5 +222,20 @@ class _ActionPageBodyState extends State<ActionPageBody> {
             ),
           );
         });
+  }
+
+  Widget imageShow() {
+    if (imageFile != null) {
+      return Column(
+        children: [
+          SizedBox(height: 10),
+          Image.file(
+            imageFile,
+            fit: BoxFit.cover,
+          )
+        ],
+      );
+    }
+    return SizedBox(height: 0.1);
   }
 }

@@ -194,7 +194,7 @@ class _HomePageBodyState extends State<HomePageBody> {
                       )
                     ],
                   ),
-                  ImageShow(),
+                  imageShow(),
                   RoundedButton(
                     text: "Aggiungi",
                     press: () async {
@@ -217,7 +217,7 @@ class _HomePageBodyState extends State<HomePageBody> {
         });
   }
 
-  Widget ImageShow() {
+  Widget imageShow() {
     if (imageFile != null) {
       return Column(
         children: [
