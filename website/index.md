@@ -55,7 +55,7 @@ sections:
     content: Scarica la nostra app ora!
     actions:
       - label: Android
-        url: /thank-you
+        url: https://drive.google.com/file/d/1A4GN6VkhXRXeiU9UwsU6DlYQIodN_wpR/view?usp=sharing
         style: primary
     actions_width: fourty
     align: center
